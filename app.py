@@ -5,6 +5,38 @@ Run with:  streamlit run app.py
 """
 
 import streamlit as st
+import base64
+import os
+
+# ---------------------------------------------------------------------------
+# BACKGROUND IMAGE
+# Put an image file named background.jpg in the same folder as this file.
+# ---------------------------------------------------------------------------
+def set_background(image_file="background.jpg"):
+    if not os.path.exists(image_file):
+        return  # no image yet — app still works fine without one
+    with open(image_file, "rb") as f:
+        encoded = base64.b64encode(f.read()).decode()
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image: url("data:image/jpg;base64,{encoded}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }}
+        .stApp::before {{
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: -1;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
 
 # ---------------------------------------------------------------------------
 # GUN DATA
@@ -147,6 +179,7 @@ def show_welcome_page():
 
 def main():
     st.set_page_config(page_title="Dazzy's Build Lab", page_icon="🔫", layout="centered")
+    set_background("background.jpg")
 
     # Gate the whole app behind the animated welcome page until a name is set
     if "player_name" not in st.session_state:
@@ -211,4 +244,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-            
