@@ -94,8 +94,76 @@ def classify_build(stats):
     return "Stable Recoil build", "Steadiest spray pattern — best if you want consistency over speed or range."
 
 
+def show_welcome_page():
+    """Animated landing page — shown once per session until a name is entered."""
+    st.markdown(
+        """
+        <style>
+        @keyframes fadeSlideIn {
+            0%   { opacity: 0; transform: translateY(25px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px #ff4b4b, 0 0 20px #ff4b4b; }
+            50%      { text-shadow: 0 0 20px #ff914d, 0 0 35px #ff914d; }
+        }
+        .welcome-title {
+            font-size: 3em;
+            font-weight: 800;
+            text-align: center;
+            animation: fadeSlideIn 1s ease-out, glow 2.5s ease-in-out infinite;
+            margin-bottom: 0;
+        }
+        .welcome-subtitle {
+            font-size: 1.3em;
+            text-align: center;
+            color: #cccccc;
+            animation: fadeSlideIn 1.2s ease-out;
+            margin-top: 0;
+            margin-bottom: 2em;
+        }
+        .name-prompt {
+            text-align: center;
+            font-size: 1.1em;
+            animation: fadeSlideIn 1.6s ease-out;
+        }
+        </style>
+        <div class="welcome-title">🔫 Welcome to Dazzy's Build Lab</div>
+        <div class="welcome-subtitle">Bloodstrike Gun Modification</div>
+        <div class="name-prompt">Enter your name to get started</div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    name = st.text_input("Your name", key="name_input", label_visibility="collapsed", placeholder="Type your name here...")
+
+    if st.button("Enter the Lab", use_container_width=True):
+        if name.strip():
+            st.session_state["player_name"] = name.strip()
+            st.rerun()
+        else:
+            st.warning("Type your name first so I know who's building.")
+
+
 def main():
     st.set_page_config(page_title="Dazzy's Build Lab", page_icon="🔫", layout="centered")
+
+    # Gate the whole app behind the animated welcome page until a name is set
+    if "player_name" not in st.session_state:
+        show_welcome_page()
+        return
+
+    st.markdown(
+        f"""
+        <style>
+        @keyframes fadeIn {{ 0% {{ opacity: 0; }} 100% {{ opacity: 1; }} }}
+        .greet {{ animation: fadeIn 1s ease-in; font-size: 1.2em; margin-bottom: 0.5em; }}
+        </style>
+        <div class="greet">👋 Welcome back, <b>{st.session_state['player_name']}</b> — let's build something.</div>
+        """,
+        unsafe_allow_html=True,
+    )
+
     st.title("🔫 Dazzy's Build Lab")
     st.caption(
         "Pick a gun and attachments, see what build you've made. "
@@ -143,3 +211,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+            
