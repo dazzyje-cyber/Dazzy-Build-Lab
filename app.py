@@ -1,6 +1,6 @@
 # streamlit_app.py
 """
-DAZZY BUILD LAB - Single-file Streamlit prototype
+DAZZY JE's BUILD LAB - Single-file Streamlit prototype
 Run:
   pip install streamlit pillow qrcode matplotlib numpy
   streamlit run streamlit_app.py
